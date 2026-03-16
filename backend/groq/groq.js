@@ -1,7 +1,7 @@
 const Groq = require("groq-sdk");
 require("dotenv").config();
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-async function getGroqChatCompletion(msg) {
+async function getGroqChatCompletion(msg, model) {
   return groq.chat.completions.create({
     messages: [
       {
@@ -9,8 +9,12 @@ async function getGroqChatCompletion(msg) {
         content: msg,
       },
     ],
-    model: "openai/gpt-oss-20b",
+    model: model,
   });
 }
 
-module.exports = { getGroqChatCompletion };
+const getModels = async () => {
+  return await groq.models.list();
+};
+
+module.exports = { getGroqChatCompletion, getModels };

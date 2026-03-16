@@ -1,11 +1,11 @@
 const db = require("../db/db");
-const { getGroqChatCompletion } = require("../groq/groq");
+const { getGroqChatCompletion, getModels } = require("../groq/groq");
 
-const textToText = async (req, res) => {
-  const { userInput } = req.body;
+const textToText = async (req, res, next) => {
+  const { userInput, model } = req.body;
   //validate using zod
 
-  const chatCompletion = await getGroqChatCompletion(userInput);
+  const chatCompletion = await getGroqChatCompletion(userInput, model);
   console.log(
     "api response -->",
     chatCompletion.choices[0]?.message?.content || "",
@@ -20,7 +20,7 @@ const textToText = async (req, res) => {
   }
 };
 
-const getMessages = async (req, res) => {
+const getMessages = async (req, res, next) => {
   try {
     const result = await db.query(`SELECT id, type, content FROM messages`);
     if (!result.rowCount) {
@@ -79,4 +79,16 @@ const insertMessages = async (req, res, next) => {
   }
 };
 
-module.exports = { textToText, getMessages, insertMessages };
+const listModels = async (req, res, next) => {
+  try {
+    const result = await getModels();
+    return res.status(200).json({
+      status: true,
+      data: result.data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { textToText, getMessages, insertMessages, listModels };

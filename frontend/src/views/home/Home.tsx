@@ -10,6 +10,7 @@ import {
 } from "@/constants/endpoints"
 import api from "../../api/api"
 import { v4 as uuid } from "uuid"
+import Dropdown from "@/components/custom/dropdown/Dropdown"
 
 const Home = () => {
   type Message = {
@@ -20,6 +21,7 @@ const Home = () => {
 
   const [messages, setMessages] = useState<Message[]>([])
   const [userInput, setUserInput] = useState("")
+  const [selectedModel, setSelectedModel] = useState("openai/gpt-oss-120b")
 
   const handleTextAreaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setUserInput(event.target.value)
@@ -30,6 +32,7 @@ const Home = () => {
     try {
       const payload = {
         userInput: userInput,
+        model: selectedModel,
       }
       const newUserMessage: Message = {
         id: uuid(),
@@ -73,8 +76,16 @@ const Home = () => {
   }, [])
   return (
     <div className="h-screen overflow-hidden">
-      <h1>Chatbot</h1>
-      <div className="main flex h-[96vh] min-h-0 flex-col">
+      <div className="header flex h-[7vh] justify-between px-5 py-2">
+        <div className="logo">GroqGPT</div>
+        <div className="dropdown w-65">
+          <Dropdown
+            selectedModel={selectedModel}
+            setSelectedModel={setSelectedModel}
+          />
+        </div>
+      </div>
+      <div className="main flex h-[92vh] min-h-0 flex-col">
         <div className="displayArea h-12/15 min-h-0 px-5 py-2">
           <Card className="h-full min-h-0 overflow-visible">
             <CardContent className="flex min-h-0 flex-1 flex-col">
@@ -96,7 +107,7 @@ const Home = () => {
           </Card>
         </div>
         <div className="textLoc flex h-3/15 w-full items-center gap-2 p-4">
-          <div className="w-14/15">
+          <div className="w-19/20">
             <Textarea
               className="h-24"
               value={userInput}
@@ -104,11 +115,11 @@ const Home = () => {
               onChange={handleTextAreaChange}
             />
           </div>
-          <div className="flex w-1/15 items-center justify-center">
+          <div className="flex w-1/20 items-center justify-center">
             <Button
               variant="outline"
               size="icon"
-              className="h-16 w-16"
+              className="h-11 w-11"
               aria-label="Submit"
               onClick={handleSubmit}
             >
