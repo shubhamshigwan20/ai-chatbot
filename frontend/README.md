@@ -1,21 +1,29 @@
-# React + TypeScript + Vite + shadcn/ui
+﻿# Frontend (React + Vite + Tailwind/shadcn)
 
-This is a template for a new Vite project with React, TypeScript, and shadcn/ui.
+The UI is a single-page chat interface that lets users pick a Groq model, send messages, and view history.
 
-## Adding components
+**How It Works**
+- `Home.tsx` fetches history on load (`GET /get-messages`).
+- On submit, it posts to `POST /text-to-text`, renders the reply, then persists both messages via `POST /insert-messages`.
+- The model dropdown loads from `GET /list-models`.
 
-To add components to your app, run the following command:
+**Key Files**
+- `frontend/src/views/home/Home.tsx` main UI and API flow
+- `frontend/src/components/custom/dropdown/Dropdown.tsx` model picker
+- `frontend/src/api/api.ts` Axios client
+- `frontend/src/constants/endpoints.ts` API paths
 
+**Environment**
+Create `frontend/.env`:
 ```bash
-npx shadcn@latest add button
+VITE_API_URL=http://localhost:80
 ```
 
-This will place the ui components in the `src/components` directory.
+**Run**
+1. `cd frontend`
+2. `npm install`
+3. `npm run dev`
 
-## Using components
-
-To use the components in your app, import them as follows:
-
-```tsx
-import { Button } from "@/components/ui/button"
-```
+**Notes**
+- UI uses Tailwind + shadcn primitives.
+- Messages are rendered as chat bubbles with user/system alignment.
