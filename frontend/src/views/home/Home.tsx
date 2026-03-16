@@ -89,17 +89,26 @@ const Home = () => {
         <div className="displayArea h-12/15 min-h-0 px-5 py-2">
           <Card className="h-full min-h-0 overflow-visible">
             <CardContent className="flex min-h-0 flex-1 flex-col">
-              <div className="flex min-h-0 flex-1 flex-col items-start gap-3 overflow-auto">
+              <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto pr-2">
                 {messages?.map((card) => {
+                  const isUser = card.type === "user"
                   return (
-                    <Card
+                    <div
                       key={card.id}
-                      className={`h-md max-w-9/10 ${card.type === "user" ? "self-end" : ""}`}
+                      className={`flex w-full ${isUser ? "justify-end" : "justify-start"}`}
                     >
-                      <CardContent className="">
-                        <p>{card?.content}</p>
-                      </CardContent>
-                    </Card>
+                      <div
+                        className={[
+                          "max-w-[70%] rounded-2xl px-4 py-3 text-sm leading-6 shadow-sm",
+                          "whitespace-pre-wrap break-words",
+                          isUser
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-foreground",
+                        ].join(" ")}
+                      >
+                        {card.content}
+                      </div>
+                    </div>
                   )
                 })}
               </div>
