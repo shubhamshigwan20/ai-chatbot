@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, type ChangeEvent } from "react"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { ArrowUpIcon } from "lucide-react"
@@ -12,10 +12,16 @@ import api from "../../api/api"
 import { v4 as uuid } from "uuid"
 
 const Home = () => {
-  const [messages, setMessages] = useState([])
+  type Message = {
+    id: string
+    type: "user" | "system"
+    content: string
+  }
+
+  const [messages, setMessages] = useState<Message[]>([])
   const [userInput, setUserInput] = useState("")
 
-  const handleTextAreaChange = (event) => {
+  const handleTextAreaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setUserInput(event.target.value)
   }
 
@@ -25,7 +31,7 @@ const Home = () => {
       const payload = {
         userInput: userInput,
       }
-      const newUserMessage = {
+      const newUserMessage: Message = {
         id: uuid(),
         type: "user",
         content: userInput,
@@ -37,7 +43,7 @@ const Home = () => {
       if (result.status !== 200) {
         //show error
       }
-      const newSystemMessage = {
+      const newSystemMessage: Message = {
         id: uuid(),
         type: "system",
         content: result.data.data,
@@ -53,7 +59,7 @@ const Home = () => {
       if (!dbInsert) {
         //console log db error //find retry mechanism
       }
-    } catch (err) {
+    } catch {
       //console any error
     }
   }
@@ -76,6 +82,7 @@ const Home = () => {
                 {messages?.map((card) => {
                   return (
                     <Card
+                      key={card.id}
                       className={`h-md max-w-9/10 ${card.type === "user" ? "self-end" : ""}`}
                     >
                       <CardContent className="">
